@@ -33,9 +33,11 @@ int main(int argc, char **argv) {
 
   ScalismoUI ui;
   Group g = ui.createGroup("a newly created group");
-  ui.showImage(g, image, "abc");
+//  ui.showImage(g, image, "abc");
+//
+//  ui.showTriangleMesh(g, meanMesh, "a mesh");
 
-  ui.showTriangleMesh(g, meanMesh, "a mesh");
+  ui.showStatisticalShapeModel(g, model, "aModel");
 
   return 0;
 }

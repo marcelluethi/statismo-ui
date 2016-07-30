@@ -55,11 +55,27 @@ struct Image {
     2: required ImageData data;
 }
 
+typedef list<double> DoubleVector
+
+typedef list<DoubleVector> ListOfDoubleVectors
+
+struct KLBasis {
+    1: required DoubleVector eigenvalues
+    2: required ListOfDoubleVectors eigenvectors
+}
+
+struct StatisticalShapeModel {
+    1: required TriangleMesh reference;
+    2: required DoubleVector mean;
+    3: required KLBasis klbasis;
+}
+
 service UI {
   Group createGroup(1:string name);
   void showPointCloud(1: Group g, 2:PointList p, 3:string name);
   void showTriangleMesh(1: Group g, 2:TriangleMesh m, 3:string name);
   void showImage(1: Group g, 2:Image img, 3:string name);
+  void showStatisticalShapeModel(1 : Group g, 2:StatisticalShapeModel ssm, 3:string name)
 }
 
 
