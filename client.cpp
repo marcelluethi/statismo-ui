@@ -43,7 +43,12 @@ int main(int argc, char **argv) {
   for (unsigned i = 0; i < newCoeffs.size(); ++i) {
     newCoeffs[i] += 1;
   }
-  ShapeModelTransformationView nv = v.SetShapeTransformation(v.GetShapeTransformation().SetShapeTransformation(newCoeffs));
+  itk::Euler3DTransform<float>::Pointer euler = itk::Euler3DTransform<float>::New();
+  euler->SetIdentity();
+  euler->SetRotation(0.01, 1.0, 2.0);
+  itk::Vector<float> t(3); t[0] = 10; t[1] = 20; t[2] = 30;
+  euler->SetTranslation(t);
+  ShapeModelTransformationView nv = v.SetShapeTransformation(v.GetShapeTransformation().SetShapeTransformation(newCoeffs)).SetPoseTransformation(PoseTransformation(euler));
   ui.updateShapeModelTransformationView(nv);
   return 0;
 }

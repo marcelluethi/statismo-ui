@@ -72,9 +72,10 @@ struct StatisticalShapeModel {
 
 
 struct EulerTransform {
-    1: required double phi;
-    2: required double theta;
-    3: required double psi;
+    1: required Point3D center;
+    2: required double angleX;
+    3: required double angleY;
+    4: required double angleZ;
 }
 
 struct TranslationTransform {
