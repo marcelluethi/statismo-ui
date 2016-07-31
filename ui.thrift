@@ -70,12 +70,42 @@ struct StatisticalShapeModel {
     3: required KLBasis klbasis;
 }
 
+
+struct EulerTransform {
+    1: required double phi;
+    2: required double theta;
+    3: required double psi;
+}
+
+struct TranslationTransform {
+    1: required double x;
+    2: required double y;
+    3: required double z;
+}
+
+struct RigidTransformation {
+    1: required EulerTransform rotation;
+    2: required TranslationTransform translation;
+}
+
+struct ShapeTransformation {
+    1: required DoubleVector coefficients;
+}
+
+struct ShapeModelTransformationView {
+    1: required i32 id;
+    2: required ShapeTransformation shapeTransformation;
+    3: required RigidTransformation poseTransformation;
+}
+
+
 service UI {
   Group createGroup(1:string name);
   void showPointCloud(1: Group g, 2:PointList p, 3:string name);
   void showTriangleMesh(1: Group g, 2:TriangleMesh m, 3:string name);
   void showImage(1: Group g, 2:Image img, 3:string name);
-  void showStatisticalShapeModel(1 : Group g, 2:StatisticalShapeModel ssm, 3:string name)
+  ShapeModelTransformationView showStatisticalShapeModel(1 : Group g, 2:StatisticalShapeModel ssm, 3:string name)
+  void updateShapeModelTransformation(1: ShapeModelTransformationView smtv)
 }
 
 

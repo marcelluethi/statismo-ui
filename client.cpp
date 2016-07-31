@@ -25,11 +25,11 @@ int main(int argc, char **argv) {
 
   MeshType::Pointer meanMesh = model->DrawSample();
 
-  typedef itk::ImageFileReader<ImageType> ReaderType;
-  typename ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName("/tmp/vsd-0003.nii");
-  reader->Update();
-  ImageType::Pointer image = reader->GetOutput();
+//  typedef itk::ImageFileReader<ImageType> ReaderType;
+//  typename ReaderType::Pointer reader = ReaderType::New();
+//  reader->SetFileName("/tmp/vsd-0003.nii");
+//  reader->Update();
+//  ImageType::Pointer image = reader->GetOutput();
 
   ScalismoUI ui;
   Group g = ui.createGroup("a newly created group");
@@ -37,7 +37,13 @@ int main(int argc, char **argv) {
 //
 //  ui.showTriangleMesh(g, meanMesh, "a mesh");
 
-  ui.showStatisticalShapeModel(g, model, "aModel");
+  const ShapeModelTransformationView& v = ui.showStatisticalShapeModel(g, model, "aModel");
 
+  vnl_vector<float> newCoeffs(v.GetShapeTransformation().GetCoefficients());
+  for (unsigned i = 0; i < newCoeffs.size(); ++i) {
+    newCoeffs[i] += 1;
+  }
+  ShapeModelTransformationView nv = v.SetShapeTransformation(v.GetShapeTransformation().SetShapeTransformation(newCoeffs));
+  ui.updateShapeModelTransformationView(nv);
   return 0;
 }
