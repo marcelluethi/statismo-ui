@@ -8,7 +8,7 @@
 #include "itkStatisticalModel.h"
 #include "itkImage.h"
 #include "itkImageFileReader.h"
-#include "ScalismoUI.h"
+#include "StatismoUI.h"
 
 int main(int argc, char **argv) {
 
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 //  reader->Update();
 //  ImageType::Pointer image = reader->GetOutput();
 
-  ScalismoUI ui;
+  StatismoUI ui;
   Group g = ui.createGroup("a newly created group");
 //  ui.showImage(g, image, "abc");
 //
