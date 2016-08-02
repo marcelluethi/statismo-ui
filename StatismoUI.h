@@ -215,8 +215,8 @@ public:
 
         ui::Point3D origin;
         origin.x = image->GetOrigin().GetElement(0);
-        origin.z = image->GetOrigin().GetElement(1);
-        origin.x = image->GetOrigin().GetElement(2);
+        origin.y = image->GetOrigin().GetElement(1);
+        origin.z = image->GetOrigin().GetElement(2);
 
         ui::IntVector3D size;
         size.i = image->GetLargestPossibleRegion().GetSize().GetElement(0);
