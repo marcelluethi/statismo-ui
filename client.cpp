@@ -25,18 +25,19 @@ int main(int argc, char **argv) {
 
   MeshType::Pointer meanMesh = model->DrawSample();
 
-//  typedef itk::ImageFileReader<ImageType> ReaderType;
-//  typename ReaderType::Pointer reader = ReaderType::New();
-//  reader->SetFileName("/tmp/vsd-0003.nii");
-//  reader->Update();
-//  ImageType::Pointer image = reader->GetOutput();
+  typedef itk::ImageFileReader<ImageType> ReaderType;
+  typename ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName("/tmp/varian-0021.nii");
+  reader->Update();
+  ImageType::Pointer image = reader->GetOutput();
 
   StatismoUI ui;
   Group g = ui.createGroup("a newly created group");
-//  ui.showImage(g, image, "abc");
+  ui.showImage(g, image, "abc");
 //
 //  ui.showTriangleMesh(g, meanMesh, "a mesh");
 
+  /*
   const ShapeModelTransformationView& v = ui.showStatisticalShapeModel(g, model, "aModel");
 
   vnl_vector<float> newCoeffs(v.GetShapeTransformation().GetCoefficients());
@@ -45,10 +46,12 @@ int main(int argc, char **argv) {
   }
   itk::Euler3DTransform<float>::Pointer euler = itk::Euler3DTransform<float>::New();
   euler->SetIdentity();
-  euler->SetRotation(0.01, 1.0, 2.0);
+  //  euler->SetRotation(0.1, 0.1, 0.3);
   itk::Vector<float> t(3); t[0] = 10; t[1] = 20; t[2] = 30;
   euler->SetTranslation(t);
   ShapeModelTransformationView nv = v.SetShapeTransformation(v.GetShapeTransformation().SetShapeTransformation(newCoeffs)).SetPoseTransformation(PoseTransformation(euler));
-  ui.updateShapeModelTransformationView(nv);
+
+    ui.updateShapeModelTransformationView(nv);
+  */
   return 0;
 }

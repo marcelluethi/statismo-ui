@@ -15,8 +15,8 @@
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
 #include <iostream>
-#include <ITK-4.10/itkRigid3DTransform.h>
-#include <ITK-4.10/itkEuler3DTransform.h>
+#include <itkRigid3DTransform.h>
+#include <itkEuler3DTransform.h>
 #include "itkMesh.h"
 #include "itkStatismoIO.h"
 #include "itkStandardMeshRepresenter.h"
