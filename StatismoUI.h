@@ -65,6 +65,7 @@ public:
     {
         m_eulerTransform = Euler3DTransformType::New();
         m_eulerTransform->SetMatrix(rigidTransform->GetMatrix());
+        m_eulerTransform->SetTranslation(rigidTransform->GetTranslation());
         m_eulerTransform->SetCenter(rigidTransform->GetCenter());
     }
 
@@ -136,6 +137,7 @@ class StatismoUI {
 //    using namespace boost;
 
     typedef itk::Mesh<float, 3> MeshType;
+    typedef MeshType::PointType PointType;
     typedef itk::Image<short, 3> ImageType;
     typedef itk::StatisticalModel<MeshType> StatisticalModelType;
 
@@ -168,6 +170,20 @@ public:
     }
 
 
+    void showPointCloud(const Group& group, const std::list<PointType> points, const std::string& name) {
+        ui::PointList pts;
+
+        for (std::list<PointType>::const_iterator it = points.begin(); it != points.end(); ++it) {
+            ui::Point3D p;
+            MeshType::PointType pt = *it;
+            p.x = pt.GetElement(0);
+            p.y = pt.GetElement(1);
+            p.z = pt.GetElement(2);
+            pts.push_back(p);
+        }
+	m_ui.showPointCloud(groupToThriftGroup(group), pts, name);
+
+    }
 
     ShapeModelTransformationView showStatisticalShapeModel(const Group& group, const StatisticalModelType* ssm, const std::string& name) {
         ui::StatisticalShapeModel model;
@@ -179,8 +195,6 @@ public:
         ui::DoubleVector meanVector;
 
         vnl_matrix<float> pcaBasisMatrix =  ssm->GetOrthonormalPCABasisMatrix();
-        std::cout << "rows " << pcaBasisMatrix.rows() << std::endl;
-        std::cout << "cols " << pcaBasisMatrix.cols() << std::endl;
         vnl_vector<float> meanVecStatismo = ssm->GetMeanVector();
         statismo::VectorType refVec = ssm->GetRepresenter()->SampleToSampleVector(ssm->GetRepresenter()->GetReference());
 
@@ -261,6 +275,8 @@ private:
 
 
     ShapeModelTransformationView shapeModelTransformationViewFromThrift(const ui::ShapeModelTransformationView& tvthrift) {
+
+
 
         vnl_vector<float> coeffs(tvthrift.shapeTransformation.coefficients.size());
         for (unsigned i = 0; i < coeffs.size(); ++i) {
