@@ -25,4 +25,10 @@ install( FILES
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ COMPONENT dev
 )
 
+install( DIRECTORY
+    "gen-cpp"
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ COMPONENT dev
+)
+
+
 install( TARGETS statismo-ui DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/ COMPONENT dev)
