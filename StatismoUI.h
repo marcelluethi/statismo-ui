@@ -25,7 +25,7 @@
 #include "itkImageFileReader.h"
 
 
-
+namespace StatismoUI {
 class Group {
 public:
     Group(const std::string& name, int id) : m_name(name), m_id(id) {}
@@ -377,5 +377,6 @@ private:
     ui::UIClient m_ui;
 };
 
+}
 
 #endif //UI_STATISMOUI_H
