@@ -22,10 +22,11 @@ int main(int argc, char **argv) {
 
   RepresenterType::Pointer representer = RepresenterType::New();
 
+  /*
   itk::StatisticalModel<MeshType>::Pointer model = itk::StatismoIO<MeshType>::LoadStatisticalModel(representer, "/tmp/facemodel.h5");
 
   MeshType::Pointer meanMesh = model->DrawSample();
-
+  */
 //  typedef itk::ImageFileReader<ImageType> ReaderType;
 //  typename ReaderType::Pointer reader = ReaderType::New();
 //  reader->SetFileName("/tmp/varian-0021.nii");
@@ -37,8 +38,21 @@ int main(int argc, char **argv) {
 //  ui.showImage(g, image, "abc");
 //
 //  ui.showTriangleMesh(g, meanMesh, "a mesh");
+  
+  MeshType::PointType pt;
+  pt.SetElement(0, 10);
+  pt.SetElement(1, 20);
+  pt.SetElement(2, 30);
+
+  vnl_matrix<double> cov(3,3); cov.set_identity();
+  cov(0, 0) = 100;
+  cov(1, 1) = 10;
+  cov(2, 2) = 1;
+  ui.showLandmark(g, pt, cov, "a landmark");
+  
 
 
+  /*
   const StatismoUI::ShapeModelTransformationView& v = ui.showStatisticalShapeModel(g, model, "aModel");
 
   vnl_vector<float> newCoeffs(v.GetShapeTransformation().GetCoefficients());
@@ -57,6 +71,7 @@ int main(int argc, char **argv) {
   StatismoUI::ShapeModelTransformationView nv = v.SetPoseTransformation(StatismoUI::PoseTransformation(euler));//v.SetShapeTransformation(v.GetShapeTransformation().SetShapeTransformation(newCoeffs)).SetPoseTransformation(PoseTransformation(euler));
     std::cout << "pose tv rotation " << nv.GetPoseTransformation().GetTranslation() << std::endl;
     ui.updateShapeModelTransformationView(nv);
+	*/
 
   return 0;
 }

@@ -23,7 +23,7 @@
 #include "itkStatisticalModel.h"
 #include "itkImage.h"
 #include "itkImageFileReader.h"
-
+#include "vnl/algo/vnl_svd.h"
 
 namespace StatismoUI {
 class Group {
@@ -223,6 +223,50 @@ public:
         m_ui.showStatisticalShapeModel(tv, groupToThriftGroup(group), model, name);
         return shapeModelTransformationViewFromThrift(tv);
     }
+
+
+	void showLandmark(const Group& group, const PointType& point, const vnl_matrix<double> cov, const std::string& name) {
+		if (cov.cols() != 3 || cov.rows() != 3) {
+			throw std::invalid_argument(" cov matrix must be 3 x 3");
+		}
+		ui::Landmark landmark;
+		landmark.name = name;
+
+		ui::Point3D tpoint;
+		tpoint.x = point.GetElement(0);
+		tpoint.y = point.GetElement(1);
+		tpoint.z = point.GetElement(2);
+
+		landmark.point = tpoint;
+
+		vnl_svd<double> svd(cov);
+		ui::UncertaintyCovariance tcov;
+		ui::Vector3D varianceVec;
+		varianceVec.x = svd.W(0);
+		varianceVec.y = svd.W(1);
+		varianceVec.z = svd.W(2);
+
+		ui::Vector3D pc1;
+		ui::Vector3D pc2;
+		ui::Vector3D pc3;
+		pc1.x = svd.U(0, 0);
+		pc1.y = svd.U(0, 1);
+		pc1.z = svd.U(0, 2);
+		pc2.x = svd.U(1, 0);
+		pc2.y = svd.U(1, 1);
+		pc2.z = svd.U(1, 2);
+		pc3.x = svd.U(2, 0);
+		pc3.y = svd.U(2, 1);
+		pc3.z = svd.U(2, 2);
+
+		tcov.variances = varianceVec;
+		tcov.principalAxis1 = pc1;
+		tcov.principalAxis2 = pc2;
+		tcov.principalAxis3 = pc3;
+
+		landmark.uncertainty = tcov;
+		m_ui.showLandmark(groupToThriftGroup(group), landmark, name);
+	}
 
     void showImage(const Group& group, const ImageType* image, const std::string& name) {
         // and now an image
