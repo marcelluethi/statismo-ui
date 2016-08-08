@@ -21,7 +21,7 @@ target_link_libraries (client thrift statismo-ui)
 
 
 install( FILES
-    "statismoUI.h"
+    "StatismoUI.h"
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ COMPONENT dev
 )
 
