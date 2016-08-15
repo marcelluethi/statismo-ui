@@ -40,9 +40,9 @@ int main(int argc, char **argv) {
 //  ui.showTriangleMesh(g, meanMesh, "a mesh");
   
   MeshType::PointType pt;
-  pt.SetElement(0, 10);
-  pt.SetElement(1, 20);
-  pt.SetElement(2, 30);
+  pt.SetElement(0, 0);
+  pt.SetElement(1, 0);
+  pt.SetElement(2, 0);
 
   vnl_matrix<double> cov(3,3); cov.set_identity();
   cov(0, 0) = 100;
@@ -50,6 +50,17 @@ int main(int argc, char **argv) {
   cov(2, 2) = 1;
   ui.showLandmark(g, pt, cov, "a landmark");
   
+
+  MeshType::PointType pt2;
+  pt2.SetElement(0, 10);
+  pt2.SetElement(1, 3);
+  pt2.SetElement(2, 1);
+
+  vnl_matrix<double> cov2(3,3); cov2.set_identity();
+  cov2(0, 0) = 1;
+  cov2(1, 1) = 1;
+  cov2(2, 2) = 1;
+  ui.showLandmark(g, pt2, cov2, "landmark 2");
 
 
   /*

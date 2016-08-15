@@ -12,7 +12,7 @@ set(thrift_LIBRARY_DIR "THRIFT_LIBRARY_DIR" CACHE PATH "")
 include_directories(${statismo_INCLUDE_DIRS} ${thrift_INCLUDE_DIR})
 link_directories( ${ITK_LIBRARY_DIRS} ${statismo_LIBRARY_DIRS} ${thrift_LIBRARY_DIR})
 
-add_library (statismo-ui STATIC gen-cpp/UI.cpp gen-cpp/ui_types.cpp gen-cpp/ui_constants.cpp)
+add_library (statismo-ui STATIC gen-cpp/UI.cpp gen-cpp/ui_types.cpp gen-cpp/ui_constants.cpp StatismoUI.cpp)
 
 target_link_libraries (statismo-ui ${ITK_LIBRARIES} ${statismo_LIBRARIES} thrift)
 
