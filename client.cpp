@@ -11,34 +11,34 @@
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 
-int main(int argc, char **argv) {
 
+int main(int argc, char **argv) {
 
 
   typedef itk::Mesh<float, 3> MeshType;
   typedef itk::Image<short, 3> ImageType;
 
   typedef itk::StandardMeshRepresenter<float, 3> RepresenterType;
+  typedef itk::StatisticalModel<MeshType> StatisticalModelType;
 
   RepresenterType::Pointer representer = RepresenterType::New();
+  StatisticalModelType::Pointer model = itk::StatismoIO<MeshType>::LoadStatisticalModel(representer, "data\\model.h5");
 
-  /*
-  itk::StatisticalModel<MeshType>::Pointer model = itk::StatismoIO<MeshType>::LoadStatisticalModel(representer, "/tmp/facemodel.h5");
-
-  MeshType::Pointer meanMesh = model->DrawSample();
-  */
+  StatismoUI::StatismoUI ui;
+  StatismoUI::Group g = ui.createGroup("a newly created group");
+ 
+  //MeshType::Pointer meanMesh = model->DrawSample();
+  
 //  typedef itk::ImageFileReader<ImageType> ReaderType;
 //  typename ReaderType::Pointer reader = ReaderType::New();
 //  reader->SetFileName("/tmp/varian-0021.nii");
 //  reader->Update();
 //  ImageType::Pointer image = reader->GetOutput();
 //
-  StatismoUI::StatismoUI ui;
-  StatismoUI::Group g = ui.createGroup("a newly created group");
 //  ui.showImage(g, image, "abc");
 //
 //  ui.showTriangleMesh(g, meanMesh, "a mesh");
-  
+  /*
   MeshType::PointType pt;
   pt.SetElement(0, 0);
   pt.SetElement(1, 0);
@@ -61,9 +61,8 @@ int main(int argc, char **argv) {
   cov2(1, 1) = 1;
   cov2(2, 2) = 1;
   ui.showLandmark(g, pt2, cov2, "landmark 2");
+  */
 
-
-  /*
   const StatismoUI::ShapeModelTransformationView& v = ui.showStatisticalShapeModel(g, model, "aModel");
 
   vnl_vector<float> newCoeffs(v.GetShapeTransformation().GetCoefficients());
@@ -76,13 +75,12 @@ int main(int argc, char **argv) {
     p.SetElement(0, 10); p.SetElement(1, 5); p.SetElement(2, 55);
   euler->SetCenter(p);
   //  euler->SetRotation(0.1, 0.1, 0.3);
-  itk::Vector<float> t(3); t[0] = 0; t[1] = 0; t[2] = 0;
+  itk::Vector<float> t(3); t[0] = 0; t[1] = 0; t[2] = 0;	
     euler->SetRotation(0 , 0, 1.5);
   euler->SetTranslation(t);
   StatismoUI::ShapeModelTransformationView nv = v.SetPoseTransformation(StatismoUI::PoseTransformation(euler));//v.SetShapeTransformation(v.GetShapeTransformation().SetShapeTransformation(newCoeffs)).SetPoseTransformation(PoseTransformation(euler));
     std::cout << "pose tv rotation " << nv.GetPoseTransformation().GetTranslation() << std::endl;
     ui.updateShapeModelTransformationView(nv);
-	*/
-
+	
   return 0;
 }

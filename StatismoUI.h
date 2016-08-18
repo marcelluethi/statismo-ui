@@ -67,12 +67,25 @@ public:
     PoseTransformation(itk::Rigid3DTransform<float>* rigidTransform)
     {
         m_eulerTransform = Euler3DTransformType::New();
+	//		m_eulerTransform->Register();
+//		m_eulerTransform->SetIdentity();
         m_eulerTransform->SetMatrix(rigidTransform->GetMatrix());
         m_eulerTransform->SetTranslation(rigidTransform->GetTranslation());
         m_eulerTransform->SetCenter(rigidTransform->GetCenter());
     }
 
-    double GetAngleX() const {
+	PoseTransformation& operator=(const PoseTransformation& rhs) {
+		if (this != &rhs) {
+			m_eulerTransform = rhs.m_eulerTransform;
+		}
+		return *this;
+	}
+
+	PoseTransformation(const PoseTransformation& orig) {
+		m_eulerTransform = orig.m_eulerTransform;
+	}
+
+	double GetAngleX() const {
         return m_eulerTransform->GetAngleX();
     }
 

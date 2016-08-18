@@ -256,7 +256,8 @@ namespace StatismoUI {
         v.SetElement(2, tvthrift.poseTransformation.translation.z);
         eulerTransform->SetTranslation(v);
 
-        return ShapeModelTransformationView(tvthrift.id, PoseTransformation(eulerTransform), ShapeTransformation(coeffs));
+		PoseTransformation pose(eulerTransform);
+        return ShapeModelTransformationView(tvthrift.id, pose, ShapeTransformation(coeffs));
 
     }
 
