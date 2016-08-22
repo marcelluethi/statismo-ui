@@ -76,10 +76,16 @@ namespace StatismoUI {
     }
 
 
-    void StatismoUI::showTriangleMesh(const Group& group, const MeshType* mesh, const std::string& name) {
+    TriangleMeshView StatismoUI::showTriangleMesh(const Group& group, const MeshType* mesh, const std::string& name) {
         ui::TriangleMesh thriftMesh = meshToThriftMesh(mesh);
 
-        ServerConnection::GetInstance().GetThriftUI().showTriangleMesh(groupToThriftGroup(group), thriftMesh, name);
+        ui::TriangleMeshView tmvThrift;
+        ServerConnection::GetInstance().GetThriftUI().showTriangleMesh(tmvThrift, groupToThriftGroup(group), thriftMesh, name);
+
+        Color color(tmvThrift.color.r, tmvThrift.color.g, tmvThrift.color.b);
+
+        TriangleMeshView tmv(tmvThrift.id, color, tmvThrift.opacity);
+        return tmv;
     }
 
 
@@ -132,9 +138,10 @@ namespace StatismoUI {
         klBasis.eigenvectors = eigenVectors;
         model.klbasis = klBasis;
         model.mean = meanVector;
-        ui::ShapeModelTransformationView tv;
-        ServerConnection::GetInstance().GetThriftUI().showStatisticalShapeModel(tv, groupToThriftGroup(group), model, name);
-        return shapeModelTransformationViewFromThrift(tv);
+        //ui::ShapeModelTransformationView tv;
+        ui::ShapeModelView sv;
+        ServerConnection::GetInstance().GetThriftUI().showStatisticalShapeModel(sv, groupToThriftGroup(group), model, name);
+        return shapeModelTransformationViewFromThrift(sv.shapeModelTransformationView);
     }
 
     void StatismoUI::showLandmark(const Group& group, const PointType& point, const vnl_matrix<double> cov, const std::string& name) {
@@ -213,13 +220,28 @@ namespace StatismoUI {
         thriftImage.data = data;
         thriftImage.domain = domain;
 
-        ServerConnection::GetInstance().GetThriftUI().showImage(groupToThriftGroup(group), thriftImage, name);
+        ui::ImageView iv;
+        ServerConnection::GetInstance().GetThriftUI().showImage(iv, groupToThriftGroup(group), thriftImage, name);
 
     }
 
 
     void StatismoUI::updateShapeModelTransformationView(const ShapeModelTransformationView& smv) {
         ServerConnection::GetInstance().GetThriftUI().updateShapeModelTransformation(shapeModelTransformationViewToThrift(smv));
+    }
+
+
+    void StatismoUI::updateTriangleMeshView(const TriangleMeshView &tmv) {
+        ui::TriangleMeshView thriftTmv;
+        Color color = tmv.GetColor();
+        thriftTmv.id = tmv.GetId();
+        thriftTmv.color.r = color.red;
+        thriftTmv.color.g = color.green;
+        thriftTmv.color.b = color.blue;
+        thriftTmv.opacity = tmv.GetOpacity();
+
+        std::cout << "updating with id " << tmv.GetId() << std::endl;
+        ServerConnection::GetInstance().GetThriftUI().updateTriangleMeshView(thriftTmv);
     }
 
 

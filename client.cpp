@@ -29,14 +29,10 @@ int main(int argc, char **argv) {
  
   //MeshType::Pointer meanMesh = model->DrawSample();
   
-//  typedef itk::ImageFileReader<ImageType> ReaderType;
-//  typename ReaderType::Pointer reader = ReaderType::New();
-//  reader->SetFileName("/tmp/varian-0021.nii");
-//  reader->Update();
-//  ImageType::Pointer image = reader->GetOutput();
-//
-//  ui.showImage(g, image, "abc");
-//
+  itk::StatisticalModel<MeshType>::Pointer model = itk::StatismoIO<MeshType>::LoadStatisticalModel(representer, "/tmp/facemodel.h5");
+
+  MeshType::Pointer meanMesh = model->DrawSample();
+
 //  ui.showTriangleMesh(g, meanMesh, "a mesh");
   /*
   MeshType::PointType pt;
@@ -62,6 +58,13 @@ int main(int argc, char **argv) {
   cov2(2, 2) = 1;
   ui.showLandmark(g, pt2, cov2, "landmark 2");
   */
+
+//
+    StatismoUI::TriangleMeshView tv = ui.showTriangleMesh(g, meanMesh, "a mesh");
+
+    ui.updateTriangleMeshView(tv.SetColor(StatismoUI::Color(1.0, 1.0, 255.0)));
+
+  /*
 
   const StatismoUI::ShapeModelTransformationView& v = ui.showStatisticalShapeModel(g, model, "aModel");
 

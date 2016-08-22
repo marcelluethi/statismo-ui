@@ -19,7 +19,7 @@
 #include "vnl/algo/vnl_svd.h"
 
 
-// foreward declarations for 
+// foreward declarations for
 namespace ui {
     class Group;
 
@@ -142,6 +142,34 @@ private:
     int m_id;
 };
 
+struct Color {
+    Color(int r, int g, int b) : red(r), green(g), blue(b) {}
+
+    int red;
+    int green;
+    int blue;
+
+};
+
+class TriangleMeshView {
+public:
+    TriangleMeshView(int id, const Color color, double opacity) : m_id(id), m_color(color), m_opacity(opacity)
+    {   }
+
+
+    int GetId() const { return m_id; }
+    TriangleMeshView SetColor(const Color& c) const {
+        return TriangleMeshView(m_id, c, m_opacity);
+    }
+
+    Color GetColor() const { return m_color; }
+    double GetOpacity() const { return m_opacity; }
+
+private:
+    int m_id;
+    Color m_color;
+    double m_opacity;
+};
 
 class StatismoUI {
 
@@ -164,7 +192,7 @@ public:
 
     Group createGroup(const std::string& name);
 
-    void showTriangleMesh(const Group& group, const MeshType* mesh, const std::string& name);
+    TriangleMeshView showTriangleMesh(const Group& group, const MeshType* mesh, const std::string& name);
 
     void showPointCloud(const Group& group, const std::list<PointType> points, const std::string& name);
 
@@ -176,6 +204,7 @@ public:
     void showImage(const Group& group, const ImageType* image, const std::string& name);
 
     void updateShapeModelTransformationView(const ShapeModelTransformationView& smv);
+    void updateTriangleMeshView(const TriangleMeshView& tmv);
 
 private:
 
