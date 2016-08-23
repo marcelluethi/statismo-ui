@@ -44,14 +44,18 @@ struct Landmark {
 }
 
 typedef list<Point3D> PointList
- 
+
 struct TriangleCell {
     1: required i32 id1;
     2: required i32 id2;
     3: required i32 id3;
 }
 
-
+struct Color {
+    1: required i16 r;
+    2: required i16 g;
+    3: required i16 b;
+}
 
 
 typedef list<TriangleCell> TriangleCellList
@@ -60,6 +64,14 @@ typedef list<TriangleCell> TriangleCellList
 struct TriangleMesh {
     1: required PointList vertices;
     2: required TriangleCellList topology;
+}
+
+struct TriangleMeshView {
+    1: required  i32 id;
+    2: required Color color;
+    3: required i32 lineWidth;
+    4: required double opacity;
+
 }
 
 struct ImageDomain {
@@ -75,7 +87,12 @@ struct Image {
     2: required ImageData data;
 }
 
-
+struct ImageView {
+    1: required i32 id;
+    2: required double window;
+    3: required double level;
+    4: required double opacity;
+}
 
 
 struct KLBasis {
@@ -119,16 +136,22 @@ struct ShapeModelTransformationView {
 }
 
 
+struct ShapeModelView {
+    1: required TriangleMeshView meshView;
+    2: required ShapeModelTransformationView shapeModelTransformationView;
+}
+
+
 service UI {
   Group createGroup(1:string name);
   void showPointCloud(1: Group g, 2:PointList p, 3:string name);
-  void showTriangleMesh(1: Group g, 2:TriangleMesh m, 3:string name);
-  void showImage(1: Group g, 2:Image img, 3:string name);
+  TriangleMeshView showTriangleMesh(1: Group g, 2:TriangleMesh m, 3:string name);
+  ImageView showImage(1: Group g, 2:Image img, 3:string name);
   void showLandmark(1 : Group g, 2 : Landmark landmark, 3 : string name);
-  ShapeModelTransformationView showStatisticalShapeModel(1 : Group g, 2:StatisticalShapeModel ssm, 3:string name);
+  ShapeModelView showStatisticalShapeModel(1 : Group g, 2:StatisticalShapeModel ssm, 3:string name);
   void updateShapeModelTransformation(1: ShapeModelTransformationView smtv);
-
-
+  void updateTriangleMeshView(1: TriangleMeshView tvm);
+  void updateImageView(1 : ImageView iv);
 }
 
 
