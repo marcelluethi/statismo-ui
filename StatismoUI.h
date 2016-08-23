@@ -16,6 +16,7 @@
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "vnl/algo/vnl_svd.h"
+#include "gen-cpp/ui_types.h"
 
 
 // foreward declarations for
@@ -39,6 +40,7 @@ namespace StatismoUI {
         int GetId() const { return m_id; }
 
         const std::string &GetName() const { return m_name; }
+
 
     private:
         std::string m_name;
@@ -205,9 +207,9 @@ namespace StatismoUI {
                        const ShapeModelTransformationView &shapeModelTransformationView)
                 : m_triangleMeshView(triangleMeshView), m_shapeModelTransformationView(shapeModelTransformationView) {}
 
-        TriangleMeshView GetTriangleMeshView() { return m_triangleMeshView; }
+        TriangleMeshView GetTriangleMeshView() const { return m_triangleMeshView; }
 
-        ShapeModelTransformationView GetShapeModelTransformationView() { return m_shapeModelTransformationView; }
+        ShapeModelTransformationView GetShapeModelTransformationView() const { return m_shapeModelTransformationView; }
 
     private:
         TriangleMeshView m_triangleMeshView;
@@ -295,12 +297,23 @@ namespace StatismoUI {
 
         void updateImageView(const ImageView &imv);
 
+
+        void removeGroup(const Group& group);
+        void removeTriangleMesh(const TriangleMeshView& tmv);
+        void removeImage(const ImageView& imv);
+        void removeShapeModelTransformation(const ShapeModelTransformationView& ssmtview);
+        void removeShapeModel(const ShapeModelView & ssmview);
+
     private:
 
         ui::Group groupToThriftGroup(const Group &group);
 
         ShapeModelView
         shapeModelViewFromThrift(const ui::ShapeModelView &smvThrift);
+
+        ui::ShapeModelView
+        shapeModelViewToThriftShapeModelView(const ShapeModelView &tv);
+
 
         ShapeModelTransformationView
         shapeModelTransformationViewFromThrift(const ui::ShapeModelTransformationView &tvthrift);
@@ -309,7 +322,11 @@ namespace StatismoUI {
         shapeModelTransformationViewToThrift(const ShapeModelTransformationView &tv);
 
 
+        ui::ImageView
+        imageViewToThriftImageView(const ImageView& iv);
+
         TriangleMeshView triangleMeshViewFromThriftMeshView(ui::TriangleMeshView tmvThrift);
+        ui::TriangleMeshView thriftMeshViewFromTriangleMeshView(const TriangleMeshView& tmv);
         ui::TriangleMesh meshToThriftMesh(const MeshType *mesh);
 
 

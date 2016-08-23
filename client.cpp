@@ -27,20 +27,20 @@ int main(int argc, char **argv) {
   RepresenterType::Pointer representer = RepresenterType::New();
   itk::StatisticalModel<MeshType>::Pointer model = itk::StatismoIO<MeshType>::LoadStatisticalModel(representer, "/tmp/facemodel.h5");
 
-//  MeshType::Pointer meanMesh = model->DrawSample();
-//
-//    StatismoUI::TriangleMeshView tv = ui.showTriangleMesh(g, meanMesh, "a mesh");
-//    tv.SetColor(StatismoUI::Color(1.0, 1.0, 255.0)).SetOpacity(0.8).SetLineWidth(5);
-//    ui.updateTriangleMeshView(tv);
-//
-//    itk::ImageFileReader<ImageType>::Pointer reader = itk::ImageFileReader<ImageType>::New();
-//    reader->SetFileName("/tmp/vsd-0.nii");
-//    reader->Update();
-//    ImageType::Pointer img = reader->GetOutput();
-//    StatismoUI::ImageView imageView = ui.showImage(g, img, "an imag");
-//    imageView.SetWindow(1115).SetLevel(1200).SetOpacity(0.5);
-//
-//    ui.updateImageView(imageView);
+  MeshType::Pointer meanMesh = model->DrawSample();
+
+    StatismoUI::TriangleMeshView tv = ui.showTriangleMesh(g, meanMesh, "a mesh");
+    tv.SetColor(StatismoUI::Color(1.0, 1.0, 255.0)).SetOpacity(0.8).SetLineWidth(5);
+    ui.updateTriangleMeshView(tv);
+
+    itk::ImageFileReader<ImageType>::Pointer reader = itk::ImageFileReader<ImageType>::New();
+    reader->SetFileName("/tmp/vsd-0.nii");
+    reader->Update();
+    ImageType::Pointer img = reader->GetOutput();
+    StatismoUI::ImageView imageView = ui.showImage(g, img, "an imag");
+    imageView.SetWindow(1115).SetLevel(1200).SetOpacity(0.5);
+
+    ui.updateImageView(imageView);
 //
 
   StatismoUI::ShapeModelView ssmView = ui.showStatisticalShapeModel(g, model, "aModel");
@@ -68,6 +68,6 @@ int main(int argc, char **argv) {
     tmv.SetColor(StatismoUI::Color(255, 0, 0));
     ui.updateTriangleMeshView(tmv);
 
-
+    //ui.removeTriangleMesh(tmv);
   return 0;
 }

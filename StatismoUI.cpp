@@ -216,6 +216,7 @@ namespace StatismoUI {
         for (unsigned i = 0; i < pixelContainer->Size(); ++i) {
             data.push_back((*pixelContainer)[i]);
         }
+
         ui::Image thriftImage;
         thriftImage.data = data;
         thriftImage.domain = domain;
@@ -234,14 +235,7 @@ namespace StatismoUI {
 
 
     void StatismoUI::updateTriangleMeshView(const TriangleMeshView &tmv) {
-        ui::TriangleMeshView thriftTmv;
-        Color color = tmv.GetColor();
-        thriftTmv.id = tmv.GetId();
-        thriftTmv.color.r = color.red;
-        thriftTmv.color.g = color.green;
-        thriftTmv.color.b = color.blue;
-        thriftTmv.opacity = tmv.GetOpacity();
-        thriftTmv.lineWidth = tmv.GetLineWidth();
+        ui::TriangleMeshView thriftTmv = thriftMeshViewFromTriangleMeshView(tmv);
 
         std::cout << "updating with id " << tmv.GetId() << std::endl;
         ServerConnection::GetInstance().GetThriftUI().updateTriangleMeshView(thriftTmv);
@@ -256,11 +250,7 @@ namespace StatismoUI {
     }
 
     void StatismoUI::updateImageView(const ImageView &imageView) {
-        ui::ImageView thriftImageView;
-        thriftImageView.id = imageView.GetId();
-        thriftImageView.opacity = imageView.GetOpacity();
-        thriftImageView.level = imageView.GetLevel();
-        thriftImageView.window = imageView.GetWindow();
+        ui::ImageView thriftImageView = imageViewToThriftImageView(imageView);
 
 
         ServerConnection::GetInstance().GetThriftUI().updateImageView(thriftImageView);
@@ -273,6 +263,18 @@ namespace StatismoUI {
 
         TriangleMeshView tmv(tmvThrift.id, color, tmvThrift.opacity, tmvThrift.lineWidth);
         return tmv;
+    }
+
+    ui::TriangleMeshView StatismoUI::thriftMeshViewFromTriangleMeshView(const TriangleMeshView& tmv) {
+        ui::TriangleMeshView thriftTmv;
+        Color color = tmv.GetColor();
+        thriftTmv.id = tmv.GetId();
+        thriftTmv.color.r = color.red;
+        thriftTmv.color.g = color.green;
+        thriftTmv.color.b = color.blue;
+        thriftTmv.opacity = tmv.GetOpacity();
+        thriftTmv.lineWidth = tmv.GetLineWidth();
+        return thriftTmv;
     }
 
 
@@ -383,6 +385,49 @@ namespace StatismoUI {
 
         return thriftMesh;
     }
+
+
+    ui::ImageView StatismoUI::imageViewToThriftImageView(const ImageView& imageView) {
+        ui::ImageView thriftImageView;
+        thriftImageView.id = imageView.GetId();
+        thriftImageView.opacity = imageView.GetOpacity();
+        thriftImageView.level = imageView.GetLevel();
+        thriftImageView.window = imageView.GetWindow();
+        return thriftImageView;
+    }
+
+    ui::ShapeModelView StatismoUI::shapeModelViewToThriftShapeModelView(const ShapeModelView& smv) {
+        ui::ShapeModelView thriftSmv;
+        ui::ShapeModelTransformationView tssmView = shapeModelTransformationViewToThrift(smv.GetShapeModelTransformationView());
+        ui::TriangleMeshView tMeshView = thriftMeshViewFromTriangleMeshView(smv.GetTriangleMeshView());
+        thriftSmv.shapeModelTransformationView = tssmView;
+        thriftSmv.meshView = tMeshView;
+        return thriftSmv;
+    }
+
+    void StatismoUI::removeGroup(const Group& group) {
+        ServerConnection::GetInstance().GetThriftUI().removeGroup(groupToThriftGroup(group));
+    }
+
+    void StatismoUI::removeTriangleMesh(const TriangleMeshView& tmv) {
+        ui::TriangleMeshView thriftTmv = thriftMeshViewFromTriangleMeshView(tmv);
+        ServerConnection::GetInstance().GetThriftUI().removeTriangleMesh(thriftTmv);
+    }
+
+    void StatismoUI::removeImage(const ImageView& imv) {
+        ui::ImageView thriftImageView = imageViewToThriftImageView(imv);
+        ServerConnection::GetInstance().GetThriftUI().removeImage(thriftImageView);
+    }
+
+    void StatismoUI::removeShapeModelTransformation(const ShapeModelTransformationView& ssmtview) {
+        ui::ShapeModelTransformationView tssmView = shapeModelTransformationViewToThrift(ssmtview);
+        ServerConnection::GetInstance().GetThriftUI().removeShapeModelTransformation(tssmView);
+    }
+    void StatismoUI::removeShapeModel(const ShapeModelView & ssmview) {
+        ui::ShapeModelView smvThrift = shapeModelViewToThriftShapeModelView(ssmview);
+        ServerConnection::GetInstance().GetThriftUI().removeShapeModel(smvThrift);
+    }
+
 
 
 
