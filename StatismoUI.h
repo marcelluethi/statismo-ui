@@ -16,7 +16,6 @@
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "vnl/algo/vnl_svd.h"
-#include "gen-cpp/ui_types.h"
 
 
 // foreward declarations for
@@ -30,6 +29,8 @@ namespace ui {
     class TriangleMesh;
 
     class TriangleMeshView;
+
+    class ImageView;
 }
 
 namespace StatismoUI {
@@ -306,6 +307,7 @@ namespace StatismoUI {
 
     private:
 
+
         ui::Group groupToThriftGroup(const Group &group);
 
         ShapeModelView
@@ -322,8 +324,8 @@ namespace StatismoUI {
         shapeModelTransformationViewToThrift(const ShapeModelTransformationView &tv);
 
 
-        ui::ImageView
-        imageViewToThriftImageView(const ImageView& iv);
+
+        ui::ImageView imageViewToThriftImageView(const ImageView& iv);
 
         TriangleMeshView triangleMeshViewFromThriftMeshView(ui::TriangleMeshView tmvThrift);
         ui::TriangleMeshView thriftMeshViewFromTriangleMeshView(const TriangleMeshView& tmv);
