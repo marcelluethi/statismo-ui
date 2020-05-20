@@ -1,34 +1,60 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(ui)
+cmake_minimum_required(VERSION 3.12)
+project(statismo-ui)
 
-FIND_PACKAGE(statismo REQUIRED)
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-FIND_PACKAGE(ITK REQUIRED)
-include (${ITK_USE_FILE})
+option(BUILD_EXAMPLES "Build client examples" ON)
 
+# Dependencies
+find_package(Thrift REQUIRED)
 
-set(thrift_INCLUDE_DIR "THRIFT_INCLUDE_DIR" CACHE PATH "")
-set(thrift_LIBRARY_DIR "THRIFT_LIBRARY_DIR" CACHE PATH "")
-include_directories(${statismo_INCLUDE_DIRS} ${thrift_INCLUDE_DIR})
-link_directories( ${ITK_LIBRARY_DIRS} ${statismo_LIBRARY_DIRS} ${thrift_LIBRARY_DIR})
+find_package(statismo 0.12.0 REQUIRED)
+include(${STATISMO_USE_FILE})
 
-add_library (statismo-ui STATIC gen-cpp/UI.cpp gen-cpp/ui_types.cpp gen-cpp/ui_constants.cpp StatismoUI.cpp)
+# Thrift files generation and target construction
+set(_generated_dir ${PROJECT_SOURCE_DIR}/src/thrift)
 
-target_link_libraries (statismo-ui ${ITK_LIBRARIES} ${statismo_LIBRARIES} thrift)
+set(_generated_src 
+  ${_generated_dir}/UI.cpp 
+  ${_generated_dir}/ui_types.cpp 
+  ${_generated_dir}/ui_constants.cpp
+)
 
-add_executable (client client.cpp)
-target_link_libraries (client thrift statismo-ui)
+set(_src 
+  ${PROJECT_SOURCE_DIR}/src/StatismoUI.h
+  ${PROJECT_SOURCE_DIR}/src/StatismoUI.cpp
+)
 
+file(MAKE_DIRECTORY ${_generated_dir})
+add_custom_command(
+  OUTPUT ${_generated_src}
+  COMMAND ${THRIFT_COMPILER} -gen cpp -out ${_generated_dir} ${PROJECT_SOURCE_DIR}/src/ui.thrift
+)
 
-install( FILES
-    "StatismoUI.h"
+# _ notation for coherence with statismo
+add_library(statismo_ui ${_src} ${_generated_src})
+target_include_directories(statismo_ui 
+  PUBLIC  
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include/>
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/gen-cpp
+    ${THRIFT_INCLUDE_DIR}
+)
+target_compile_features(statismo_ui PUBLIC cxx_std_17)
+target_link_libraries(statismo_ui 
+  PUBLIC ${STATISMO_LIBRARIES} ${ITK_LIBRARIES}
+  PRIVATE ${THRIFT_STATIC_LIB})
+
+# Examples
+if (BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
+
+# Install
+install(FILES
+  "src/StatismoUI.h"
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ COMPONENT dev
 )
 
-install( DIRECTORY
-    "gen-cpp"
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ COMPONENT dev
-)
-
-
-install( TARGETS statismo-ui DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/ COMPONENT dev)
+install(TARGETS statismo_ui DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/ COMPONENT dev)
